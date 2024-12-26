@@ -22,12 +22,13 @@ public class ProdutoController {
     @Autowired
     private ProdutoRepository produtoRepository;
 
-    @GetMapping
-    public List<Produtos> listarProdutos() {
-        return produtoRepository.findAll();
+    @GetMapping("buscar")
+    public ResponseEntity<List<Produtos>> listarProdutos() {
+        List<Produtos> produtosLista = produtoRepository.findAll();
+        return ResponseEntity.ok(produtosLista);
     }
 
-    @PostMapping
+    @PostMapping()
     public Produtos criarProduto(@RequestBody Produtos produto) {
         return produtoRepository.save(produto);
     }
@@ -39,8 +40,8 @@ public class ProdutoController {
         return ResponseEntity.ok(produtos);
     }
     /*
-     * criar metodo que retorna uma array list de todos os produtos contendo aquela palavra,  ignorando escrita
+     * criar metodo que retorna uma array list de todos os produtos contendo aquela
+     * palavra, ignorando escrita
      */
-   
 
 }
