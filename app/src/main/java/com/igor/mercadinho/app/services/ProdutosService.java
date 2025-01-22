@@ -31,11 +31,10 @@ public class ProdutosService {
         return listarProdutos;
     }
 
-    public Produtos buscarProdutoPorId(int id) {
-        Produtos produtos = produtoRepository.findById(id)
-                .orElseThrow(() -> new ProdutoResouceNotFoundException("Produto não encontrado para o ID: " + id));
+    public Produtos buscarProdutoPorId(long id) {
 
-        return produtos;
+        return produtoRepository.findById(id)
+                .orElseThrow(() -> new ProdutoResouceNotFoundException("Produto não encontrado para o ID: " + id));
     }
 
     public List<Produtos> buscarProdutoPorString(String referencia) {
