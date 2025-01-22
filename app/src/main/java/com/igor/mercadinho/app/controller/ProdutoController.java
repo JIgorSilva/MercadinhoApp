@@ -1,7 +1,7 @@
 package com.igor.mercadinho.app.controller;
 
 import java.util.List;
-
+import java.math.BigDecimal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +20,7 @@ import com.igor.mercadinho.app.exception.ProdutoNameNotExistsException;
 import com.igor.mercadinho.app.exception.ProdutoResouceNotFoundException;
 import com.igor.mercadinho.app.model.Produtos;
 import com.igor.mercadinho.app.services.ProdutosService;
+
 
 @RestController
 @RequestMapping("/api/produto")
@@ -87,6 +88,17 @@ public class ProdutoController {
         }
         catch(ProductWithDifferentIdentifier e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+
+    @GetMapping("buscar/preco/{preco}")
+    public ResponseEntity<List<Produtos>> buscarProdutoPreco(@PathVariable BigDecimal preco){
+        try{
+            List<Produtos> produto = produtosService.buscarProdutoPreco(preco);
+            return ResponseEntity.ok(produto);  
+        }
+        catch(ProdutoResouceNotFoundException e){
+            return ResponseEntity.status(204).body(null);
         }
     }
 }
