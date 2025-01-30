@@ -1,0 +1,70 @@
+# flyctl launch added from .gitignore
+**/HELP.md
+**/target
+!**/.mvn/wrapper/maven-wrapper.jar
+!**/**/src/main/**/target
+!**/**/src/test/**/target
+
+### STS ###
+**/.apt_generated
+**/.classpath
+**/.factorypath
+**/.project
+**/.settings
+**/.springBeans
+**/.sts4-cache
+
+### IntelliJ IDEA ###
+**/.idea
+**/*.iws
+**/*.iml
+**/*.ipr
+###prop
+**/application-dev.properties
+**/application-test.properties
+**/application-prod.properties
+**/application.properties
+
+### NetBeans ###
+nbproject/private
+nbbuild
+dist
+nbdist
+.nb-gradle
+**/build
+!**/**/src/main/**/build
+!**/**/src/test/**/build
+
+### VS Code ####
+**/.vscode
+
+# flyctl launch added from .idea/.gitignore
+# Default ignored files
+.idea/shelf
+.idea/workspace.xml
+
+# flyctl launch added from src/.idea/.gitignore
+# Default ignored files
+src/.idea/shelf
+src/.idea/workspace.xml
+
+# flyctl launch added from src/main/java/com/igor/mercadinho/app/.idea/.gitignore
+# Default ignored files
+src/main/java/com/igor/mercadinho/app/.idea/shelf
+src/main/java/com/igor/mercadinho/app/.idea/workspace.xml
+
+# flyctl launch added from src/main/java/com/igor/mercadinho/app/out/production/app/com/igor/mercadinho/app/.idea/.gitignore
+# Default ignored files
+src/main/java/com/igor/mercadinho/app/out/production/app/com/igor/mercadinho/app/.idea/shelf
+src/main/java/com/igor/mercadinho/app/out/production/app/com/igor/mercadinho/app/.idea/workspace.xml
+
+# flyctl launch added from src/out/production/main/com/igor/mercadinho/app/.idea/.gitignore
+# Default ignored files
+src/out/production/main/com/igor/mercadinho/app/.idea/shelf
+src/out/production/main/com/igor/mercadinho/app/.idea/workspace.xml
+
+# flyctl launch added from src/out/production/main/com/igor/mercadinho/app/out/production/app/com/igor/mercadinho/app/.idea/.gitignore
+# Default ignored files
+src/out/production/main/com/igor/mercadinho/app/out/production/app/com/igor/mercadinho/app/.idea/shelf
+src/out/production/main/com/igor/mercadinho/app/out/production/app/com/igor/mercadinho/app/.idea/workspace.xml
+fly.toml
