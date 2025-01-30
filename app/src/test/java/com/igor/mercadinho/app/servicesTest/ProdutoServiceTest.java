@@ -1,22 +1,27 @@
 package com.igor.mercadinho.app.servicesTest;
 
-import com.igor.mercadinho.app.exception.ProdutoResouceNotFoundException;
-import com.igor.mercadinho.app.model.Produtos;
-import com.igor.mercadinho.app.repository.ProdutoRepository;
-import com.igor.mercadinho.app.services.ProdutosService;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import org.mockito.MockitoAnnotations;
+
+import com.igor.mercadinho.app.exception.ProdutoResouceNotFoundException;
+import com.igor.mercadinho.app.model.Produtos;
+import com.igor.mercadinho.app.repository.ProdutoRepository;
+import com.igor.mercadinho.app.services.ProdutosService;
 
 public class ProdutoServiceTest {
 
@@ -43,7 +48,7 @@ public class ProdutoServiceTest {
         produto.setPreco(new BigDecimal("10.50"));
 
         Produtos produto2 = new Produtos();
-        produto2.setId(null);
+        produto2.setId(null); 
         produto2.setNome("Produto Teste2");
         produto2.setDescricao("Descrição do Produto Teste2");
         produto2.setQuantidade(10);
@@ -98,6 +103,18 @@ public class ProdutoServiceTest {
         assertEquals(1,produtosResponse.getId());
         assertEquals("Produto não encontrado para o ID: "+3,produtoNaoExiste.getMessage());
         verify(produtoRepository, times(1)).findById(idProduto);
+
+    }
+
+
+    @Test
+    void buscarProdutoPorString(){
+        String referencia = "Produto Teste";
+        List<Produtos>produtosReferencia= produtos;
+        Mockito.when(produtoRepository.findAll()).thenReturn(produtosReferencia);
+
+        assertNotNull(produtosReferencia,"Lista com produtos");
+        assertEquals(referencia,produtosReferencia.get(0).getNome());
 
     }
 }
