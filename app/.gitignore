@@ -14,10 +14,19 @@ target/
 .sts4-cache
 
 ### IntelliJ IDEA ###
-.idea
+.idea/
 *.iws
 *.iml
 *.ipr
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/usage.statistics.xml
+.idea/vcs.xml
+.idea/modules.xml
+.idea/libraries/
+.idea/misc.xml
+.idea/runConfigurations/*.xml
+.idea/inspectionProfiles/*.xml
 ###prop
 application-dev.properties
 application-test.properties
@@ -34,5 +43,6 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
-### VS Code ####
+### VS Code ###
 .vscode/
+.env
