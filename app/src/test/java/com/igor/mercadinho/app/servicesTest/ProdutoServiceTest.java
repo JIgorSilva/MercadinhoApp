@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.igor.mercadinho.app.exception.ProductWithDifferentIdentifier;
+import com.igor.mercadinho.app.exception.ProdutoNameNotExistsException;
+import org.junit.jupiter.api.Assertions;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -106,15 +109,37 @@ public class ProdutoServiceTest {
 
     }
 
+    @Test
+    void buscarProdutoPorString() {
+        //arrange
+        Mockito.when(produtoRepository.findAll()).thenReturn(produtos);
+        String referencia = "Produto Teste";
+        //act
+        List<Produtos> produtosReferencia = produtosService.buscarProdutoPorString(referencia);
+        //assert
+        assertNotNull(produtosReferencia);
+        assertEquals(referencia, produtosReferencia.get(0).getNome());
+        Assertions.assertSame(produtosReferencia.get(0),produtos.get(0));
+
+    }
 
     @Test
-    void buscarProdutoPorString(){
-        String referencia = "Produto Teste";
-        List<Produtos>produtosReferencia= produtos;
-        Mockito.when(produtoRepository.findAll()).thenReturn(produtosReferencia);
+    void deletarIdComNome(){
+        Produtos produtoIdNome = new Produtos();
+        produtoIdNome.setId(1L);
+        produtoIdNome.setNome("coca");
 
-        assertNotNull(produtosReferencia,"Lista com produtos");
-        assertEquals(referencia,produtosReferencia.get(0).getNome());
+        final int idProduto = produtoIdNome.getId().intValue();
+        String nomeProdutoIncorrer = "nome incorreto";
+        ProdutoResouceNotFoundException exceptionNomeIncorreto = assertThrows(ProdutoResouceNotFoundException.class,
+                ()->produtosService.deletarProdutoPorIDcomNome(idProduto,nomeProdutoIncorrer));
+
+        Mockito.when(produtoRepository.findById(produtoIdNome.getId().intValue())).thenReturn(Optional.of(produtoIdNome));
+        produtoIdNome = produtosService.deletarProdutoPorIDcomNome(produtoIdNome.getId().intValue(),produtoIdNome.getNome());
+
+        assertNotNull(produtoIdNome);
+        assertEquals("coca",produtoIdNome.getNome());
+        assertEquals("ID não existe: " + idProduto,exceptionNomeIncorreto.getMessage());
 
     }
 }
