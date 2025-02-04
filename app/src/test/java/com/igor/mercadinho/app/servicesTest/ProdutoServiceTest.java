@@ -1,30 +1,24 @@
 package com.igor.mercadinho.app.servicesTest;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import com.igor.mercadinho.app.exception.ProductWithDifferentIdentifier;
-import com.igor.mercadinho.app.exception.ProdutoNameNotExistsException;
+import com.igor.mercadinho.app.exception.ProdutoResouceNotFoundException;
+import com.igor.mercadinho.app.model.Produtos;
+import com.igor.mercadinho.app.repository.ProdutoRepository;
+import com.igor.mercadinho.app.services.ProdutosService;
 import org.junit.jupiter.api.Assertions;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 
-import com.igor.mercadinho.app.exception.ProdutoResouceNotFoundException;
-import com.igor.mercadinho.app.model.Produtos;
-import com.igor.mercadinho.app.repository.ProdutoRepository;
-import com.igor.mercadinho.app.services.ProdutosService;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 public class ProdutoServiceTest {
 
@@ -140,6 +134,30 @@ public class ProdutoServiceTest {
         assertNotNull(produtoIdNome);
         assertEquals("coca",produtoIdNome.getNome());
         assertEquals("ID não existe: " + idProduto,exceptionNomeIncorreto.getMessage());
+
+    }
+
+    @Test
+    void alterarProduto_eSalvar(){
+        Produtos produtoAlterado = new Produtos();
+        produtoAlterado.setId(1L);
+        produtoAlterado.setNome("GG");
+        produtoAlterado.setDescricao("mega");
+        produtoAlterado.setQuantidade(13);
+        produtoAlterado.setPreco(new BigDecimal("11.50"));
+        produto.setId(1L);
+
+        Mockito.when(produtoRepository.findById(1)).thenReturn(Optional.of(produto));
+        Mockito.when(produtoRepository.save(Mockito.any(Produtos.class))).thenReturn(produtoAlterado);
+
+        produto = produtosService.alterarProduto(1,produtoAlterado);
+
+        assertEquals(produtoAlterado,produto);
+        assertNotNull(produtoAlterado);
+        assertEquals(produtoAlterado.getNome(), produto.getNome());
+        assertEquals(produtoAlterado.getDescricao(), produto.getDescricao());
+        assertEquals(produtoAlterado.getQuantidade(), produto.getQuantidade());
+        assertEquals(produtoAlterado.getPreco(), produto.getPreco());
 
     }
 }
