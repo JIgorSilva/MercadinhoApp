@@ -49,7 +49,7 @@ public class ProdutoServiceTest {
         produto2.setNome("Produto Teste2");
         produto2.setDescricao("Descrição do Produto Teste2");
         produto2.setQuantidade(10);
-        produto2.setPreco(new BigDecimal("11.50"));
+        produto2.setPreco(new BigDecimal("10.50"));
 
         produtos.add(produto);
         produtos.add(produto2);
@@ -159,5 +159,23 @@ public class ProdutoServiceTest {
         assertEquals(produtoAlterado.getQuantidade(), produto.getQuantidade());
         assertEquals(produtoAlterado.getPreco(), produto.getPreco());
 
+    }
+
+    @Test
+    void buscarProdutosPorPrecoRetornaLista(){
+        BigDecimal precoProduto = new BigDecimal("10.50");
+        List<Produtos> novaListaDeProdutos = new ArrayList<>();
+        BigDecimal produtoNaoEncontrado = new BigDecimal("10.59");
+
+        Mockito.when(produtoRepository.findAll()).thenReturn(produtos);
+
+        ProdutoResouceNotFoundException menssagem = assertThrows(ProdutoResouceNotFoundException.class,
+                ()->produtosService.buscarProdutoPreco(produtoNaoEncontrado));
+        novaListaDeProdutos = produtosService.buscarProdutoPreco(precoProduto);
+
+
+        assertNotNull(novaListaDeProdutos);
+        assertEquals(precoProduto,novaListaDeProdutos.get(0).getPreco());
+        assertEquals("Produto(s) não encotrado",menssagem.getMessage());
     }
 }
