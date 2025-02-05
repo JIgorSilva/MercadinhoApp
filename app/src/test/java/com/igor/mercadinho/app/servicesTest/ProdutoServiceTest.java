@@ -1,28 +1,24 @@
 package com.igor.mercadinho.app.servicesTest;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
+import com.igor.mercadinho.app.exception.ProdutoResouceNotFoundException;
+import com.igor.mercadinho.app.model.Produtos;
+import com.igor.mercadinho.app.repository.ProdutoRepository;
+import com.igor.mercadinho.app.services.ProdutosService;
 import org.junit.jupiter.api.Assertions;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 
-import com.igor.mercadinho.app.exception.ProdutoResouceNotFoundException;
-import com.igor.mercadinho.app.model.Produtos;
-import com.igor.mercadinho.app.repository.ProdutoRepository;
-import com.igor.mercadinho.app.services.ProdutosService;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 public class ProdutoServiceTest {
 
@@ -53,7 +49,7 @@ public class ProdutoServiceTest {
         produto2.setNome("Produto Teste2");
         produto2.setDescricao("Descrição do Produto Teste2");
         produto2.setQuantidade(10);
-        produto2.setPreco(new BigDecimal("11.50"));
+        produto2.setPreco(new BigDecimal("10.50"));
 
         produtos.add(produto);
         produtos.add(produto2);
@@ -163,5 +159,23 @@ public class ProdutoServiceTest {
         assertEquals(produtoAlterado.getQuantidade(), produto.getQuantidade());
         assertEquals(produtoAlterado.getPreco(), produto.getPreco());
 
+    }
+
+    @Test
+    void buscarProdutosPorPrecoRetornaLista(){
+        BigDecimal precoProduto = new BigDecimal("10.50");
+        List<Produtos> novaListaDeProdutos = new ArrayList<>();
+        BigDecimal produtoNaoEncontrado = new BigDecimal("10.59");
+
+        Mockito.when(produtoRepository.findAll()).thenReturn(produtos);
+
+        ProdutoResouceNotFoundException menssagem = assertThrows(ProdutoResouceNotFoundException.class,
+                ()->produtosService.buscarProdutoPreco(produtoNaoEncontrado));
+        novaListaDeProdutos = produtosService.buscarProdutoPreco(precoProduto);
+
+
+        assertNotNull(novaListaDeProdutos);
+        assertEquals(precoProduto,novaListaDeProdutos.get(0).getPreco());
+        assertEquals("Produto(s) não encotrado",menssagem.getMessage());
     }
 }
