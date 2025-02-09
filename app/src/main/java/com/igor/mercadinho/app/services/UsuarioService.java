@@ -1,13 +1,15 @@
 package com.igor.mercadinho.app.services;
 
+import com.igor.mercadinho.app.config.security.JwtUtil;
 import com.igor.mercadinho.app.exception.UsuarioNotCreatedException;
+import com.igor.mercadinho.app.exception.UsuarioNotFoundException;
+import com.igor.mercadinho.app.model.Usuario;
+import com.igor.mercadinho.app.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.igor.mercadinho.app.model.Usuario;
-import com.igor.mercadinho.app.repository.UsuarioRepository;
-
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -25,11 +27,23 @@ public class UsuarioService {
         return usuario;
     }
 
-    public List<Usuario> listarUsuarios(){
+    public List<Usuario> listarUsuarios() {
         List<Usuario> todosUsuarioslista = usuarioRepository.findAll();
         return todosUsuarioslista;
     }
 
+    public String loginUsuario(String senha, String email) {
+        Optional<Usuario> optionalUsuario = usuarioRepository.findByEmail(email);
+        Usuario usuario = optionalUsuario.orElseThrow(() -> new UsuarioNotFoundException("Email não existe"));
+        if (!usuario.getSenha().equals(senha)) {
+            throw new RuntimeException("Senha invalida");
+        }
+        String token = JwtUtil.generateToken(usuario.getEmail());
+        if (usuario.getEmail().equals(email)) {
+            return "Bem vindo " + usuario.getNome() +" TOKEN "+token;
+        }
 
+        return token;
 
+    }
 }
