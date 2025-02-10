@@ -1,7 +1,8 @@
 package com.igor.mercadinho.app.controller;
 
-import java.util.List;
 import java.math.BigDecimal;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,8 @@ import com.igor.mercadinho.app.exception.ProdutoResouceNotFoundException;
 import com.igor.mercadinho.app.model.Produtos;
 import com.igor.mercadinho.app.services.ProdutosService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 
 @RestController
 @RequestMapping("/api/produto")
@@ -30,18 +33,21 @@ public class ProdutoController {
     private ProdutosService produtosService;
 
     @GetMapping("/lista")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<List<Produtos>> listarProdutos() {
         List<Produtos> produtosLista = produtosService.listarTodosProdutos();
         return ResponseEntity.ok(produtosLista);
     }
 
     @PostMapping("criar/{produto}")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<Produtos> criarProduto(@RequestBody Produtos produto) {
         produtosService.criarProduto(produto);
         return ResponseEntity.ok(produto);
     }
 
     @GetMapping("buscar/id")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<Produtos> buscarProdutoPorId(@RequestParam int id) {
         Produtos produtos = produtosService.buscarProdutoPorId(id);
         return ResponseEntity.ok(produtos);
@@ -52,6 +58,7 @@ public class ProdutoController {
      */
 
     @GetMapping("buscar/produtos")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<List<Produtos>> buscarProdutoPorString(@RequestParam String ref){
         List<Produtos> produtos = produtosService.buscarProdutoPorString(ref);
         if(produtos.isEmpty()){
@@ -62,6 +69,7 @@ public class ProdutoController {
 
    
     @DeleteMapping("deletar/{id}")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<Produtos> deletarProdutoPorIDcomNome(@PathVariable int id, String nomeProduto){
         try{
             Produtos produto = produtosService.deletarProdutoPorIDcomNome(id, nomeProduto);
@@ -78,6 +86,7 @@ public class ProdutoController {
     }
 
     @PutMapping("alterar/{id}")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<Produtos> alterarProduto(@PathVariable int id, @RequestBody Produtos alteracoesDoProduto){
         try{
             Produtos produto = produtosService.alterarProduto(id, alteracoesDoProduto);
@@ -92,6 +101,7 @@ public class ProdutoController {
     }
 
     @GetMapping("buscar/preco/{preco}")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<List<Produtos>> buscarProdutoPreco(@PathVariable BigDecimal preco){
         try{
             List<Produtos> produto = produtosService.buscarProdutoPreco(preco);
