@@ -1,11 +1,13 @@
 package com.igor.mercadinho.app.services;
 
 import com.igor.mercadinho.app.config.security.JwtUtil;
+import com.igor.mercadinho.app.dtos.usuario.LoginUsuarioDto;
 import com.igor.mercadinho.app.exception.UsuarioNotCreatedException;
 import com.igor.mercadinho.app.exception.UsuarioNotFoundException;
 import com.igor.mercadinho.app.model.Usuario;
 import com.igor.mercadinho.app.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,11 +20,14 @@ public class UsuarioService {
     @Autowired
     UsuarioRepository usuarioRepository;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     public Usuario criarUsuario(Usuario usuario) throws UsuarioNotCreatedException {
         if (usuario == null) {
             throw new UsuarioNotCreatedException("Impossivel criar Usuario");
         }
-
+        usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
         usuarioRepository.save(usuario);
         return usuario;
     }
@@ -32,18 +37,23 @@ public class UsuarioService {
         return todosUsuarioslista;
     }
 
-    public String loginUsuario(String senha, String email) {
-        Optional<Usuario> optionalUsuario = usuarioRepository.findByEmail(email);
-        Usuario usuario = optionalUsuario.orElseThrow(() -> new UsuarioNotFoundException("Email não existe"));
-        if (!usuario.getSenha().equals(senha)) {
-            throw new RuntimeException("Senha invalida");
+    public String loginUsuario(LoginUsuarioDto loginUsuarioDto) {
+        Optional<Usuario> optionalUsuario = usuarioRepository.findByEmail(loginUsuarioDto.getEmail());
+
+        if (optionalUsuario.isEmpty()) {
+            throw new RuntimeException("Usuário não encontrado");
         }
-        String token = JwtUtil.generateToken(usuario.getEmail());
-        if (usuario.getEmail().equals(email)) {
-            return "Bem vindo " + usuario.getNome() +" TOKEN "+token;
+        Usuario usuario = optionalUsuario.get();
+        if (!passwordEncoder.matches(loginUsuarioDto.getSenha(), usuario.getSenha())) {
+            throw new RuntimeException("Senha inválida");
         }
 
+        String token = JwtUtil.generateToken(loginUsuarioDto.getEmail());
+        System.out.println("TOKEN GERADO: " + token);
+
+        if (loginUsuarioDto.getEmail().equals(loginUsuarioDto.getEmail())) {
+            return "Bem vindo " + loginUsuarioDto.getEmail() +" TOKEN "+token;
+        }
         return token;
-
     }
 }
