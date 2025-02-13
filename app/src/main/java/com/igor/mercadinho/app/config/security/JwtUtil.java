@@ -15,11 +15,10 @@ import io.jsonwebtoken.security.Keys;
 @Component
 public class JwtUtil {
 
-    // Chave secreta – o ideal é armazenar isso em uma variável de ambiente ou arquivo de configuração
+    // Chave secreta
     private static final String SECRET_KEY = "suaChaveSecretaMuitoLongaParaSeguranca12345";
 
-    // Duração do token (ex: 1 hora)
-    private static final long TOKEN_VALIDITY = 3600 * 1000;
+    private static final long TOKEN_VALIDITY = 60 * 1000;
 
     private static Key getSigningKey() {
         return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
@@ -27,8 +26,6 @@ public class JwtUtil {
 
     public static String generateToken(String username) {
         Map<String, Object> claims = new HashMap<>();
-        //adicionar outras claims
-
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(username)
