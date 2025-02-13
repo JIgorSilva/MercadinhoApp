@@ -22,6 +22,7 @@ public class UsuarioService {
         if (usuario == null) {
             throw new UsuarioNotCreatedException("Impossivel criar Usuario");
         }
+
         usuarioRepository.save(usuario);
         return usuario;
     }
@@ -31,9 +32,18 @@ public class UsuarioService {
         return todosUsuarioslista;
     }
 
+    public String loginUsuario(String senha, String email) {
+        Optional<Usuario> optionalUsuario = usuarioRepository.findByEmail(email);
+        Usuario usuario = optionalUsuario.orElseThrow(() -> new UsuarioNotFoundException("Email não existe"));
+        if (!usuario.getSenha().equals(senha)) {
+            throw new RuntimeException("Senha invalida");
         }
+        String token = JwtUtil.generateToken(usuario.getEmail());
+        if (usuario.getEmail().equals(email)) {
+            return "Bem vindo " + usuario.getNome() +" TOKEN "+token;
         }
 
         return token;
+
     }
 }
