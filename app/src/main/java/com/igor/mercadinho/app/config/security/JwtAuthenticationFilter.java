@@ -12,6 +12,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
@@ -29,8 +30,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             try {
                 username = JwtUtil.extractUsername(token);
             } catch (Exception e) {
+                // Token inválido tratar
             }
         }
+
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
