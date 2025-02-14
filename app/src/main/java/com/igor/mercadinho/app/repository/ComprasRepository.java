@@ -10,5 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface ComprasRepository extends JpaRepository<Compras,Long> { ;
-    Optional<Compras>findByUsuarioAndProduto(Usuario usuario, Produtos produtos);
+    Optional<Compras> findByUsuarioAndItensCompra_Produto(Usuario usuario, Produtos produto);
+
 }
