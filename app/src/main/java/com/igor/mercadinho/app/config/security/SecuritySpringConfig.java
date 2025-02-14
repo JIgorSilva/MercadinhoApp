@@ -40,7 +40,7 @@ public class SecuritySpringConfig {
                                 "/swagger-resources/**",
                                 "/webjars/**",
                                 "/compras",
-                                "/v3/api-docs/swagger-config" 
+                                "/v3/api-docs/swagger-config"
                         ).permitAll()
                         .anyRequest().authenticated()
                 );
