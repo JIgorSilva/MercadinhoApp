@@ -31,12 +31,12 @@
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
-            <version>10.10.0</version><!-- Mantida apenas a dependência principal do Flyway -->
+            <version>9.22.3</version>
         </dependency>
             <dependency>
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
-                <version>42.5.4</version>
+                <version>42.7.2</version>
                 <scope>runtime</scope>
             </dependency>
         <dependency>
@@ -103,6 +103,18 @@
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>9.22.3</version>
+                <configuration>
+                    <url>${flyway.url}</url>
+                    <user>${flyway.user}</user>
+                    <password>${flyway.password}</password>
+                    <baselineOnMigrate>true</baselineOnMigrate>
+                    <locations>classpath:db/migration</locations>
                 </configuration>
             </plugin>
             <plugin>

@@ -1,6 +1,5 @@
 package com.igor.mercadinho.app.config.security;
 
-import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,10 +21,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String requestURI = request.getRequestURI();
-        if (requestURI.startsWith("/swagger-ui") ||
+        if (requestURI.equals("/usuario/criar") ||
+                requestURI.equals("/auth/login") ||
+                requestURI.startsWith("/swagger-ui") ||
                 requestURI.startsWith("/v3/api-docs") ||
                 requestURI.startsWith("/swagger-resources") ||
-                requestURI.startsWith("/webjars")) {
+                requestURI.startsWith("/webjars")){
             filterChain.doFilter(request, response);
             return;
         }
@@ -40,13 +41,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 username = JwtUtil.extractUsername(token);
                 if (JwtUtil.isTokenExpired(token)) {
                     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                    response.getWriter().write("Token expirado");
+                    response.getWriter().write("Token expirado" + token);
                     return;
                 }
 
             } catch (Exception e) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().write("Token inválido");
+                response.getWriter().write("Token inválido"+e.getMessage());
                 return;
             }
         }
