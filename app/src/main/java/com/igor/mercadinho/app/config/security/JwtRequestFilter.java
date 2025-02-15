@@ -39,6 +39,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 requestURI.startsWith("/v3/api-docs") ||
                 requestURI.startsWith("/swagger-resources") ||
                 requestURI.startsWith("/webjars") ||
+                requestURI.startsWith("/usuario/criar") ||
                 requestURI.startsWith("/auth/login")) {
             chain.doFilter(request, response);
             return;

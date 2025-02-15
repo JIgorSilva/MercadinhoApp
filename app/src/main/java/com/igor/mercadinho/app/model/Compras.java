@@ -1,14 +1,11 @@
 package com.igor.mercadinho.app.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
-@Setter
-@Getter
 @Entity
 @Table(name = "compras")
 public class Compras {
@@ -21,9 +18,8 @@ public class Compras {
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
-    @ManyToOne
-    @JoinColumn(name = "produto_id", nullable = false)
-    private Produtos produto;
+    @OneToMany(mappedBy = "compra", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<ItemCompra> itens = new ArrayList<>();
 
     private int quantidadeItens;
 
@@ -35,19 +31,83 @@ public class Compras {
 
     @Column(name = "descontos")
     private double descontosNaCompra;
+    public  Compras(){}
 
-    @Override
-    public String toString() {
-        return "Compras{" +
-                "usuario=" + usuario +
-                ", produto=" + produto +
-                ", quantidadeItens=" + quantidadeItens +
-                ", dataCompra=" + dataCompra +
-                ", valorDaCompra=" + valorDaCompra +
-                ", descontosNaCompra=" + descontosNaCompra +
-                ", id=" + id +
-                '}';
+    public Long getId() {
+        return id;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public int getQuantidadeItens() {
+        return quantidadeItens;
+    }
+
+    public void setQuantidadeItens(int quantidadeItens) {
+        this.quantidadeItens = quantidadeItens;
+    }
+
+    public List<ItemCompra> getItens() {
+        return itens;
+    }
+
+    public void setItens(List<ItemCompra> itens) {
+        this.itens = itens;
+    }
+
+    public LocalDateTime getDataCompra() {
+        return dataCompra;
+    }
+
+    public void setDataCompra(LocalDateTime dataCompra) {
+        this.dataCompra = dataCompra;
+    }
+
+    public BigDecimal getValorDaCompra() {
+        return valorDaCompra;
+    }
+
+    public void setValorDaCompra(BigDecimal valorDaCompra) {
+        this.valorDaCompra = valorDaCompra;
+    }
+
+    public double getDescontosNaCompra() {
+        return descontosNaCompra;
+    }
+
+    public void setDescontosNaCompra(double descontosNaCompra) {
+        this.descontosNaCompra = descontosNaCompra;
+    }
+
+    public Compras(Long id, Usuario usuario, List<ItemCompra> itens, int quantidadeItens, LocalDateTime dataCompra, BigDecimal valorDaCompra, double descontosNaCompra) {
+        this.id = id;
+        this.usuario = usuario;
+        this.itens = itens;
+        this.quantidadeItens = quantidadeItens;
+        this.dataCompra = dataCompra;
+        this.valorDaCompra = valorDaCompra;
+        this.descontosNaCompra = descontosNaCompra;
+    }
+
+    public void adicionarItem(ItemCompra item) {
+        item.setCompra(this);
+        this.itens.add(item);
+    }
+    /*
+    public void removerItem(ItemCompra item) {
+        this.itens.remove(item);
+        item.setCompra(null);
+    }*/
 }
 
 

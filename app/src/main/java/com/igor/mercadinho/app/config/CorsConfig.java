@@ -12,6 +12,7 @@ public class CorsConfig {
     return new WebMvcConfigurer() {
         @Override
         public void addCorsMappings(CorsRegistry registry) {
+            registry.addMapping("/usuario/criar");
             registry.addMapping("/auth/**") // Permitir requisições para /auth/*
                     .allowedOrigins("http://localhost:4200") // Permitir requisições do Angular
                     .allowedMethods("POST", "GET", "PUT", "DELETE", "OPTIONS") // Métodos permitidos

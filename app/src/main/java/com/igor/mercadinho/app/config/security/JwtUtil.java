@@ -18,7 +18,7 @@ public class JwtUtil {
     // Chave secreta
     private static final String SECRET_KEY = "suaChaveSecretaMuitoLongaParaSeguranca12345";
 
-    private static final long TOKEN_VALIDITY = 60 * 1000;
+    private static final long TOKEN_VALIDITY = 600 * 1000;
 
     private static Key getSigningKey() {
         return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
