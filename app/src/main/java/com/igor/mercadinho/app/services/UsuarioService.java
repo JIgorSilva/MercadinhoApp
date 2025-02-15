@@ -3,7 +3,6 @@ package com.igor.mercadinho.app.services;
 import com.igor.mercadinho.app.config.security.JwtUtil;
 import com.igor.mercadinho.app.dtos.usuario.LoginUsuarioDto;
 import com.igor.mercadinho.app.exception.UsuarioNotCreatedException;
-import com.igor.mercadinho.app.exception.UsuarioNotFoundException;
 import com.igor.mercadinho.app.model.Usuario;
 import com.igor.mercadinho.app.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,5 +54,10 @@ public class UsuarioService {
             return "Bem vindo " + loginUsuarioDto.getEmail() +" TOKEN "+token;
         }
         return token;
+    }
+
+    public Optional<Usuario> buscarEmailUsuraio(String email){
+        Optional<Usuario> emailUsuario = usuarioRepository.findByEmail(email);
+        return  emailUsuario;
     }
 }
