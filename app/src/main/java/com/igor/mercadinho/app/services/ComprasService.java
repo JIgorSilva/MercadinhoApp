@@ -1,5 +1,11 @@
 package com.igor.mercadinho.app.services;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.igor.mercadinho.app.dtos.compras.ComprasDTO;
 import com.igor.mercadinho.app.dtos.compras.ComprasDtoRequest;
 import com.igor.mercadinho.app.model.Compras;
@@ -10,14 +16,8 @@ import com.igor.mercadinho.app.repository.ComprasRepository;
 import com.igor.mercadinho.app.repository.ItemCompraRepository;
 import com.igor.mercadinho.app.repository.ProdutoRepository;
 import com.igor.mercadinho.app.repository.UsuarioRepository;
-import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import jakarta.transaction.Transactional;
 
 @Service
 public class ComprasService {
@@ -109,7 +109,7 @@ public class ComprasService {
 
     public Compras salvarCompra(Compras compra) {
         for (ItemCompra item : compra.getItens()) {
-            compra.adicionarItem(item); // Usa o método para adicionar itens
+            compra.adicionarItem(item);
         }
 
         return comprasRepository.save(compra);
