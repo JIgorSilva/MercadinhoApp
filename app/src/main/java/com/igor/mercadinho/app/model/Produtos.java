@@ -28,8 +28,6 @@ public class Produtos {
     @Column(nullable = false)
     private Integer quantidade;
 
-    // Construtores, getters e setters
-
     public Produtos() {
     }
 
