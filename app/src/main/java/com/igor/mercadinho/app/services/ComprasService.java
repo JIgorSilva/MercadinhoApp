@@ -60,9 +60,11 @@ public class ComprasService {
             ItemCompra itemCompra = new ItemCompra();
             itemCompra.setProduto(produto);
             itemCompra.setQuantidade(itemDto.getQuantidade());
-            itemCompra.setPrecoUnitario(produto.getPreco());
+            itemCompra.setPrecoUnitario(itemDto.getPrecoUnitario());
 
+            BigDecimal subtotal = produto.getPreco().multiply(BigDecimal.valueOf(itemDto.getQuantidade()));
             adicionarItem(novaCompra.getId(), itemCompra);
+            itemCompra.getCompra().setValorDaCompra(subtotal);
         }
 
         atualizarValorTotal(novaCompra);
@@ -99,12 +101,28 @@ public class ComprasService {
     }
 
     private void atualizarValorTotal(Compras compra) {
-        BigDecimal totalCompra = compra.getItens().stream()
-                .map(ItemCompra::calcularSubtotal)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal totalCompra = BigDecimal.ZERO;
+        BigDecimal totalDesconto = BigDecimal.ZERO;
+
+        for (ItemCompra item : compra.getItens()) {
+
+            BigDecimal precoUnitarioJson = item.getPrecoUnitario();
+
+            int quantidade = item.getQuantidade();
+
+            BigDecimal subtotal = precoUnitarioJson.multiply(BigDecimal.valueOf(quantidade));
+
+            BigDecimal precoOriginal = itemCompraRepository.findPrecoOriginalByItemId(item.getId())
+                    .orElseThrow(() -> new RuntimeException("Preço do produto não encontrado"));
+
+            BigDecimal desconto = compra.descontoDaCompra(quantidade, precoOriginal, precoUnitarioJson);
+
+            totalCompra = totalCompra.add(subtotal);
+            totalDesconto = totalDesconto.add(desconto);
+        }
 
         compra.setValorDaCompra(totalCompra);
-        compra.setQuantidadeItens(compra.getItens().size());
+        compra.setDescontosNaCompra(totalDesconto.doubleValue());
     }
 
     public Compras salvarCompra(Compras compra) {
@@ -114,6 +132,7 @@ public class ComprasService {
 
         return comprasRepository.save(compra);
     }
+
     private void atualizarQuantidadeItens(Compras compra) {
         int quantidadeItens = compra.getItens().stream()
                 .mapToInt(ItemCompra::getQuantidade)
@@ -121,4 +140,12 @@ public class ComprasService {
 
         compra.setQuantidadeItens(quantidadeItens);
     }
+
+    public BigDecimal calcularDescontoDaCompra(Long itemId, int quantidade) {
+        BigDecimal precoOriginal = itemCompraRepository.findPrecoOriginalByItemId(itemId)
+                .orElseThrow(() -> new RuntimeException("Preço do produto não encontrado"));
+
+        return precoOriginal.multiply(BigDecimal.valueOf(quantidade));
+    }
+
 }
