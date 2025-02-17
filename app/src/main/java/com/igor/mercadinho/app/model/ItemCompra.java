@@ -66,11 +66,11 @@ public class ItemCompra {
         this.precoUnitario = precoUnitario;
     }
 
-    public ItemCompra() {
-    }
+        public ItemCompra() {
+        }
 
     public BigDecimal calcularSubtotal() {
-        return precoUnitario.multiply(BigDecimal.valueOf(quantidade));
+        return produto.getPreco().multiply(BigDecimal.valueOf(quantidade));
     }
 
     public ItemCompra(Compras compra, Produtos produto, int quantidade) {

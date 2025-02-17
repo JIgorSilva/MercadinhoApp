@@ -108,6 +108,22 @@ public class Compras {
         this.itens.remove(item);
         item.setCompra(null);
     }*/
+    public BigDecimal descontoDaCompra(int quantidadeItens, BigDecimal precoOriginal, BigDecimal precoEnviado) {
+        // Calcula o preço total do item com o preço original
+        BigDecimal totalOriginal = precoOriginal.multiply(BigDecimal.valueOf(quantidadeItens));
+
+        // Calcula o preço total do item com o preço enviado
+        BigDecimal totalEnviado = precoEnviado.multiply(BigDecimal.valueOf(quantidadeItens));
+
+        // Calcula o desconto
+        BigDecimal desconto = totalOriginal.subtract(totalEnviado);
+
+        // Converte para double e armazena no atributo
+        this.descontosNaCompra = desconto.doubleValue();
+
+        return desconto;
+    }
+
 }
 
 
