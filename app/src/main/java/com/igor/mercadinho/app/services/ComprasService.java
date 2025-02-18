@@ -1,13 +1,8 @@
 package com.igor.mercadinho.app.services;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.igor.mercadinho.app.dtos.compras.ComprasDTO;
 import com.igor.mercadinho.app.dtos.compras.ComprasDtoRequest;
+import com.igor.mercadinho.app.exception.ProdutoResouceNotFoundException;
 import com.igor.mercadinho.app.model.Compras;
 import com.igor.mercadinho.app.model.ItemCompra;
 import com.igor.mercadinho.app.model.Produtos;
@@ -16,8 +11,12 @@ import com.igor.mercadinho.app.repository.ComprasRepository;
 import com.igor.mercadinho.app.repository.ItemCompraRepository;
 import com.igor.mercadinho.app.repository.ProdutoRepository;
 import com.igor.mercadinho.app.repository.UsuarioRepository;
-
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Service
 public class ComprasService {
@@ -55,7 +54,7 @@ public class ComprasService {
 
         for (ComprasDTO itemDto : compraRequest.getItens()) {
             Produtos produto = produtoRepository.findById(itemDto.getProdutoId())
-                    .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+                    .orElseThrow(() -> new ProdutoResouceNotFoundException("Produto não encontrado"));
 
             ItemCompra itemCompra = new ItemCompra();
             itemCompra.setProduto(produto);
@@ -65,8 +64,9 @@ public class ComprasService {
             BigDecimal subtotal = produto.getPreco().multiply(BigDecimal.valueOf(itemDto.getQuantidade()));
             adicionarItem(novaCompra.getId(), itemCompra);
             itemCompra.getCompra().setValorDaCompra(subtotal);
-        }
 
+            novaCompra.validaPrecoDaCompra(itemCompra.getPrecoUnitario());
+        }
         atualizarValorTotal(novaCompra);
         atualizarQuantidadeItens(novaCompra);
 
@@ -139,6 +139,7 @@ public class ComprasService {
                 .sum();
 
         compra.setQuantidadeItens(quantidadeItens);
+        compra.validarQuantidadeDeItensNaCompra();
     }
 
     public BigDecimal calcularDescontoDaCompra(Long itemId, int quantidade) {
