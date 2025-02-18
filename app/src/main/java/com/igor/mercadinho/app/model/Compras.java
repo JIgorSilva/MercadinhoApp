@@ -1,5 +1,7 @@
 package com.igor.mercadinho.app.model;
 
+import com.igor.mercadinho.app.exception.CompraInvalidaItensNullException;
+import com.igor.mercadinho.app.exception.global.CompraInvalidadeNotFoundPrecoUnitario;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -109,21 +111,43 @@ public class Compras {
         item.setCompra(null);
     }*/
     public BigDecimal descontoDaCompra(int quantidadeItens, BigDecimal precoOriginal, BigDecimal precoEnviado) {
-        // Calcula o preço total do item com o preço original
+        // preço total com o preço original
         BigDecimal totalOriginal = precoOriginal.multiply(BigDecimal.valueOf(quantidadeItens));
 
-        // Calcula o preço total do item com o preço enviado
+        // preço total com o preço json
         BigDecimal totalEnviado = precoEnviado.multiply(BigDecimal.valueOf(quantidadeItens));
 
-        // Calcula o desconto
+        // desconto
         BigDecimal desconto = totalOriginal.subtract(totalEnviado);
 
-        // Converte para double e armazena no atributo
+        // Converte e armazena
         this.descontosNaCompra = desconto.doubleValue();
 
         return desconto;
     }
 
+    public void validarQuantidadeDeItensNaCompra() {
+        if (itens == null || itens.isEmpty()) {
+            throw new CompraInvalidaItensNullException("A compra deve conter pelo menos um item.");
+        }
+
+        for (ItemCompra item : itens) {
+            if (item.getQuantidade() <= 0) {
+                throw new CompraInvalidaItensNullException("Ação invalida, não existem itens na compra");
+            }
+        }
+    }
+
+    public BigDecimal validaPrecoDaCompra(BigDecimal preco) {
+        BigDecimal precounitario = new BigDecimal(0);
+        for (ItemCompra item : itens) {
+            if (item.getPrecoUnitario().intValue() <= 0) {
+                throw new CompraInvalidadeNotFoundPrecoUnitario("Ação invalida, não existe preço no produto.");
+            }
+            precounitario = item.getPrecoUnitario();
+        }
+        return precounitario;
+    }
 }
 
 
