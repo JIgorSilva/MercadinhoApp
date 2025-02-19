@@ -1,5 +1,7 @@
 package com.igor.mercadinho.app.controller;
 
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -22,13 +24,16 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 public class CompraController {
     @Autowired
     private ComprasService comprasService;
-    
+
     @PostMapping
     @SecurityRequirement(name = "bearerAuth")
     @Operation(summary = "Realizar compra", description = "Inicia um processo de compra e retorna os detalhes da transação.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Compra realizada com sucesso")
+    })
     public ResponseEntity<ComprasDtoResponse> comprar(@RequestBody ComprasDtoRequest comprasDtoRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        
+
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new CredenciaisNaoAutorizadaException("Token inválido ou expirado");
         }

@@ -72,7 +72,6 @@ public class SecuritySpringConfig {
                                 "/v3/api-docs/**",
                                 "/swagger-resources/**",
                                 "/webjars/**",
-                                "/compras",
                                 "/v3/api-docs/swagger-config")
                         .permitAll()
                         .requestMatchers("/api/produto/lista").authenticated() // Exige autenticação
