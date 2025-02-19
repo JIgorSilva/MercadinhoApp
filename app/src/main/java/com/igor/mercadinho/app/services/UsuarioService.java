@@ -3,6 +3,8 @@ package com.igor.mercadinho.app.services;
 import com.igor.mercadinho.app.config.security.JwtUtil;
 import com.igor.mercadinho.app.dtos.usuario.LoginUsuarioDto;
 import com.igor.mercadinho.app.exception.UsuarioNotCreatedException;
+import com.igor.mercadinho.app.exception.UsuarioNotFoundException;
+import com.igor.mercadinho.app.exception.global.CredenciaisInvalidadasTwoException;
 import com.igor.mercadinho.app.model.Usuario;
 import com.igor.mercadinho.app.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,11 +42,11 @@ public class UsuarioService {
         Optional<Usuario> optionalUsuario = usuarioRepository.findByEmail(loginUsuarioDto.getEmail());
 
         if (optionalUsuario.isEmpty()) {
-            throw new RuntimeException("Usuário não encontrado");
+            throw new UsuarioNotFoundException("Usuário não encontrado");
         }
         Usuario usuario = optionalUsuario.get();
         if (!passwordEncoder.matches(loginUsuarioDto.getSenha(), usuario.getSenha())) {
-            throw new RuntimeException("Senha inválida");
+            throw new CredenciaisInvalidadasTwoException("Usuario ou senha invalidos");
         }
 
         String token = JwtUtil.generateToken(loginUsuarioDto.getEmail());

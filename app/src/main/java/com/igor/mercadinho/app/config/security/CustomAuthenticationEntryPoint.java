@@ -27,7 +27,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint{
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
             throws IOException, ServletException {
-                System.out.println("Log --> Custom__Authentication__EntryPoint foi acionado!");
+        System.out.println("Log --> CustomAuthenticationEntryPoint acionado para: " + request.getRequestURI());
         //handler global
         //ResponseEntity<ApiErrorResponse> responseEntity = exceptionHandler.handlerCredenciaisNaoAutorizadaException(exception);
         ApiErrorResponse errorResponse = new ApiErrorResponse(
