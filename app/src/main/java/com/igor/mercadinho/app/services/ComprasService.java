@@ -11,6 +11,7 @@ import com.igor.mercadinho.app.repository.ComprasRepository;
 import com.igor.mercadinho.app.repository.ItemCompraRepository;
 import com.igor.mercadinho.app.repository.ProdutoRepository;
 import com.igor.mercadinho.app.repository.UsuarioRepository;
+
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
