@@ -23,7 +23,6 @@ jobs:
           cache: maven
 
       - name: Build and Test
-        working-directory: app
         run: |
           mvn clean package
           mvn test
