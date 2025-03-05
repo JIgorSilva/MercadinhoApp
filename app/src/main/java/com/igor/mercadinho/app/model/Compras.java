@@ -123,10 +123,10 @@ public class Compras {
         item.setCompra(null);
     }*/
     public BigDecimal descontoDaCompra(int quantidadeItens, BigDecimal precoOriginal, BigDecimal precoEnviado) {
-        // preço total com o preço original
+        
         BigDecimal totalOriginal = precoOriginal.multiply(BigDecimal.valueOf(quantidadeItens));
 
-        // preço total com o preço json
+     
         BigDecimal totalEnviado = precoEnviado.multiply(BigDecimal.valueOf(quantidadeItens));
 
         // desconto
