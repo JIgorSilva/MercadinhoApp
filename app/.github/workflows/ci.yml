@@ -26,8 +26,4 @@ jobs:
         run: |
           mvn clean package
           mvn test
-<<<<<<< HEAD
-        working-directory: app  # 🚀 Ajusta o diretório correto do projeto
-=======
         working-directory: app
->>>>>>> fix---ajust-pipiline-githubactions-TASK-31
