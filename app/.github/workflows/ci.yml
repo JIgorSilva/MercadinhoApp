@@ -26,4 +26,3 @@ jobs:
         run: |
           mvn clean package
           mvn test
-        working-directory: app
